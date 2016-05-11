@@ -55,13 +55,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\gopclient\gopclient.Client.csproj">
-      <Project>{14977613-D10C-40B4-9B91-CE4BBD630C57}</Project>
-      <Name>gopclient.Client</Name>
-    </ProjectReference>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <ProjectReference Include="..\gopclient\gopclient.Client.csproj">
+      <Project>{14977613-d10c-40b4-9b91-ce4bbd630c57}</Project>
+      <Name>gopclient.Client</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
