@@ -21,6 +21,6 @@ spec options are
   "securityDefinition": {
   }
 }
-'''
+```
 
 if you want to contribute this project please feel free to send pull requests.
