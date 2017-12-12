@@ -170,7 +170,7 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Bilateral Agreements Organization List Request</param>
         /// <returns>OrganizationServiceResponse</returns>
-        OrganizationServiceResponse Contractorganizationlist (ServiceContractOrganizationRequest body);
+        OrganizationServiceResponse Contractorganizationlist (ServiceContractOrganizationRequest body, string ticket);
   
         /// <summary>
         /// Bilateral Agreements / Organization / List Service
@@ -181,7 +181,7 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Bilateral Agreements Organization List Request</param>
         /// <returns>ApiResponse of OrganizationServiceResponse</returns>
-        ApiResponse<OrganizationServiceResponse> ContractorganizationlistWithHttpInfo (ServiceContractOrganizationRequest body);
+        ApiResponse<OrganizationServiceResponse> ContractorganizationlistWithHttpInfo (ServiceContractOrganizationRequest body, string ticket);
         
         /// <summary>
         /// Bilateral Agreements / Region / List Service
@@ -450,7 +450,6 @@ namespace gopclient.Api
         System.Threading.Tasks.Task<ApiResponse<BooleanServiceResponse>> ContractvalidatedeliverydayAsyncWithHttpInfo (ServiceQueryDeliveryDayRequest body, string gopServiceTicket);
         
         #endregion Asynchronous Operations
-        
     }
   
     /// <summary>
@@ -1639,9 +1638,9 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Bilateral Agreements Organization List Request</param> 
         /// <returns>OrganizationServiceResponse</returns>
-        public OrganizationServiceResponse Contractorganizationlist (ServiceContractOrganizationRequest body)
+        public OrganizationServiceResponse Contractorganizationlist (ServiceContractOrganizationRequest body, string gopServiceTicket)
         {
-             ApiResponse<OrganizationServiceResponse> localVarResponse = ContractorganizationlistWithHttpInfo(body);
+             ApiResponse<OrganizationServiceResponse> localVarResponse = ContractorganizationlistWithHttpInfo(body, gopServiceTicket);
              return localVarResponse.Data;
         }
 
@@ -1651,9 +1650,12 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Bilateral Agreements Organization List Request</param> 
         /// <returns>ApiResponse of OrganizationServiceResponse</returns>
-        public ApiResponse< OrganizationServiceResponse > ContractorganizationlistWithHttpInfo (ServiceContractOrganizationRequest body)
+        public ApiResponse<OrganizationServiceResponse> ContractorganizationlistWithHttpInfo(ServiceContractOrganizationRequest body, string gopServiceTicket)
         {
-            
+            // verify the required parameter 'gopServiceTicket' is set
+            if (gopServiceTicket == null)
+                throw new ApiException(400, "Missing required parameter 'gopServiceTicket' when calling ContractorganizationlistWithHttpInfo");
+
             // verify the required parameter 'body' is set
             if (body == null)
                 throw new ApiException(400, "Missing required parameter 'body' when calling ContractApi->Contractorganizationlist");
@@ -1685,10 +1687,10 @@ namespace gopclient.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
+
+            if (gopServiceTicket != null)
+                localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
+
             if (body.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(body); // http body (model) parameter

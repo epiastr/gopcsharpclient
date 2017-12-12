@@ -6,6 +6,7 @@ using System.Linq;
 using RestSharp;
 using gopclient.Client;
 using gopclient.Model;
+using Model;
 
 namespace gopclient.Api
 {
@@ -27,7 +28,7 @@ namespace gopclient.Api
         /// <param name="body">Operation History Query Request</param>
         /// <param name="gopServiceTicket">CAS Service Token (ST)</param>
         /// <returns>List&lt;OperationHistoryResponseServiceResponse&gt;</returns>
-        List<OperationHistoryResponseServiceResponse> Operationhistorylist (ServiceOperationHistorySearchRequest body, string gopServiceTicket);
+        OperationHistoryResponseServiceResponse Operationhistorylist (ServiceOperationHistorySearchRequest body, string gopServiceTicket);
   
         /// <summary>
         /// Operation History / Operation History List Service
@@ -39,7 +40,7 @@ namespace gopclient.Api
         /// <param name="body">Operation History Query Request</param>
         /// <param name="gopServiceTicket">CAS Service Token (ST)</param>
         /// <returns>ApiResponse of List&lt;OperationHistoryResponseServiceResponse&gt;</returns>
-        ApiResponse<List<OperationHistoryResponseServiceResponse>> OperationhistorylistWithHttpInfo (ServiceOperationHistorySearchRequest body, string gopServiceTicket);
+        ApiResponse<OperationHistoryResponseServiceResponse> OperationhistorylistWithHttpInfo (ServiceOperationHistorySearchRequest body, string gopServiceTicket);
         
         /// <summary>
         /// Operation History / Operation Code List Service
@@ -50,7 +51,7 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Operation Code List Request (optional)</param>
         /// <returns>ParameterQueryServiceResponse</returns>
-        ParameterQueryServiceResponse Operationhistoryoperationcodes (ServiceObject body = null);
+        ParameterQueryServiceResponse Operationhistoryoperationcodes(ServiceObject body, string casticket);
   
         /// <summary>
         /// Operation History / Operation Code List Service
@@ -61,7 +62,7 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Operation Code List Request (optional)</param>
         /// <returns>ApiResponse of ParameterQueryServiceResponse</returns>
-        ApiResponse<ParameterQueryServiceResponse> OperationhistoryoperationcodesWithHttpInfo (ServiceObject body = null);
+        ApiResponse<ParameterQueryServiceResponse> OperationhistoryoperationcodesWithHttpInfo(ServiceObject body, string casticket);
         
         #endregion Synchronous Operations
         
@@ -212,9 +213,9 @@ namespace gopclient.Api
         /// <param name="body">Operation History Query Request</param> 
         /// <param name="gopServiceTicket">CAS Service Token (ST)</param> 
         /// <returns>List&lt;OperationHistoryResponseServiceResponse&gt;</returns>
-        public List<OperationHistoryResponseServiceResponse> Operationhistorylist (ServiceOperationHistorySearchRequest body, string gopServiceTicket)
+        public OperationHistoryResponseServiceResponse Operationhistorylist (ServiceOperationHistorySearchRequest body, string gopServiceTicket)
         {
-             ApiResponse<List<OperationHistoryResponseServiceResponse>> localVarResponse = OperationhistorylistWithHttpInfo(body, gopServiceTicket);
+             ApiResponse<OperationHistoryResponseServiceResponse> localVarResponse = OperationhistorylistWithHttpInfo(body, gopServiceTicket);
              return localVarResponse.Data;
         }
 
@@ -225,9 +226,8 @@ namespace gopclient.Api
         /// <param name="body">Operation History Query Request</param> 
         /// <param name="gopServiceTicket">CAS Service Token (ST)</param> 
         /// <returns>ApiResponse of List&lt;OperationHistoryResponseServiceResponse&gt;</returns>
-        public ApiResponse< List<OperationHistoryResponseServiceResponse> > OperationhistorylistWithHttpInfo (ServiceOperationHistorySearchRequest body, string gopServiceTicket)
+        public ApiResponse<OperationHistoryResponseServiceResponse> OperationhistorylistWithHttpInfo (ServiceOperationHistorySearchRequest body, string gopServiceTicket)
         {
-            
             // verify the required parameter 'body' is set
             if (body == null)
                 throw new ApiException(400, "Missing required parameter 'body' when calling OperationhistoryApi->Operationhistorylist");
@@ -235,8 +235,7 @@ namespace gopclient.Api
             // verify the required parameter 'gopServiceTicket' is set
             if (gopServiceTicket == null)
                 throw new ApiException(400, "Missing required parameter 'gopServiceTicket' when calling OperationhistoryApi->Operationhistorylist");
-            
-    
+
             var localVarPath = "/operationhistory/list";
     
             var localVarPathParams = new Dictionary<String, String>();
@@ -247,15 +246,16 @@ namespace gopclient.Api
             Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                
-            };
+            String[] localVarHttpContentTypes = new String[] { };
+
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[]
+            {
                 "application/json", "application/xml"
             };
+
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
@@ -264,10 +264,9 @@ namespace gopclient.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             
-            
-            if (gopServiceTicket != null) localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
-            
-            
+            if (gopServiceTicket != null)
+                localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
+                        
             if (body.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(body); // http body (model) parameter
@@ -276,13 +275,18 @@ namespace gopclient.Api
             {
                 localVarPostBody = body; // byte array
             }
-
             
-    
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(
+                localVarPath, 
+                Method.POST, 
+                localVarQueryParams, 
+                localVarPostBody, 
+                localVarHeaderParams, 
+                localVarFormParams, 
+                localVarFileParams,
+                localVarPathParams, 
+                localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
     
@@ -290,11 +294,11 @@ namespace gopclient.Api
                 throw new ApiException (localVarStatusCode, "Error calling Operationhistorylist: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling Operationhistorylist: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
-            return new ApiResponse<List<OperationHistoryResponseServiceResponse>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<OperationHistoryResponseServiceResponse>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<OperationHistoryResponseServiceResponse>)));
-            
+
+            var headers = localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString());
+            var queryResponse = (OperationHistoryResponseServiceResponse) Configuration.ApiClient.Deserialize(localVarResponse, typeof(OperationHistoryResponseServiceResponse));
+
+            return new ApiResponse<OperationHistoryResponseServiceResponse>(localVarStatusCode, headers, queryResponse);
         }
 
         
@@ -393,9 +397,9 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Operation Code List Request (optional)</param> 
         /// <returns>ParameterQueryServiceResponse</returns>
-        public ParameterQueryServiceResponse Operationhistoryoperationcodes (ServiceObject body = null)
+        public ParameterQueryServiceResponse Operationhistoryoperationcodes(ServiceObject body, string gopServiceTicket)
         {
-             ApiResponse<ParameterQueryServiceResponse> localVarResponse = OperationhistoryoperationcodesWithHttpInfo(body);
+             ApiResponse<ParameterQueryServiceResponse> localVarResponse = OperationhistoryoperationcodesWithHttpInfo(body, gopServiceTicket);
              return localVarResponse.Data;
         }
 
@@ -405,10 +409,12 @@ namespace gopclient.Api
         /// <exception cref="gopclient.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body">Operation Code List Request (optional)</param> 
         /// <returns>ApiResponse of ParameterQueryServiceResponse</returns>
-        public ApiResponse< ParameterQueryServiceResponse > OperationhistoryoperationcodesWithHttpInfo (ServiceObject body = null)
+        public ApiResponse<ParameterQueryServiceResponse> OperationhistoryoperationcodesWithHttpInfo(ServiceObject body, string gopServiceTicket)
         {
-            
-    
+            // verify the required parameter 'gopServiceTicket' is set
+            if (gopServiceTicket == null)
+                throw new ApiException(400, "Missing required parameter 'gopServiceTicket' when calling OfferApi->Offerlisthistoryflexible");
+
             var localVarPath = "/operationhistory/operationcodes";
     
             var localVarPathParams = new Dictionary<String, String>();
@@ -435,10 +441,11 @@ namespace gopclient.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
+
+            if (gopServiceTicket != null)
+                localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
+
+
             if (body.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(body); // http body (model) parameter
@@ -550,7 +557,78 @@ namespace gopclient.Api
                 (ParameterQueryServiceResponse) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ParameterQueryServiceResponse)));
             
         }
-        
+
+        public GateOperationServiceResponse ListGateOperations(ServiceGateOperationRequest body, string gopServiceTicket)
+        {
+            // verify the required parameter 'body' is set
+            if (body == null)
+                throw new ApiException(400, "Missing required parameter 'body' when calling OperationHistoryApi->ListGateOperations");
+
+            // verify the required parameter 'gopServiceTicket' is set
+            if (gopServiceTicket == null)
+                throw new ApiException(400, "Missing required parameter 'gopServiceTicket' when calling OperationHistoryApi->ListGateOperations");
+            
+            var localVarPath = "/gate/operation/active";
+
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "application/xml"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+
+
+            if (gopServiceTicket != null) localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
+
+
+            if (body.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(body); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = body; // byte array
+            }
+
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400)
+                throw new ApiException(localVarStatusCode, "Error calling ListGateOperations: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling ListGateOperations: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            var apiResponse = new ApiResponse<GateOperationServiceResponse>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (GateOperationServiceResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(GateOperationServiceResponse)));
+
+
+            return apiResponse.Data;
+        }
     }
     
 }

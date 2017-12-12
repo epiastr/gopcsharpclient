@@ -6,6 +6,7 @@ using System.Linq;
 using RestSharp;
 using gopclient.Client;
 using gopclient.Model;
+using Model;
 
 namespace gopclient.Api
 {
@@ -1727,7 +1728,6 @@ namespace gopclient.Api
         /// <returns>ApiResponse of ParameterQueryServiceResponse</returns>
         public ApiResponse< ParameterQueryServiceResponse > OffercurrenciesWithHttpInfo (ServiceCurrencyRequest body, string gopServiceTicket)
         {
-            
             // verify the required parameter 'body' is set
             if (body == null)
                 throw new ApiException(400, "Missing required parameter 'body' when calling OfferApi->Offercurrencies");
@@ -1735,8 +1735,7 @@ namespace gopclient.Api
             // verify the required parameter 'gopServiceTicket' is set
             if (gopServiceTicket == null)
                 throw new ApiException(400, "Missing required parameter 'gopServiceTicket' when calling OfferApi->Offercurrencies");
-            
-    
+                
             var localVarPath = "/offer/currencies";
     
             var localVarPathParams = new Dictionary<String, String>();
@@ -1750,12 +1749,14 @@ namespace gopclient.Api
             String[] localVarHttpContentTypes = new String[] {
                 
             };
+
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", "application/xml"
             };
+
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
@@ -1765,9 +1766,11 @@ namespace gopclient.Api
             localVarPathParams.Add("format", "json");
             
             
-            if (gopServiceTicket != null) localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
-            
-            
+            if (gopServiceTicket != null)
+            {
+                localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
+            }
+                        
             if (body.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(body); // http body (model) parameter
@@ -1776,25 +1779,86 @@ namespace gopclient.Api
             {
                 localVarPostBody = body; // byte array
             }
-
             
-    
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(
+                localVarPath, 
+                Method.POST, 
+                localVarQueryParams, 
+                localVarPostBody, 
+                localVarHeaderParams, 
+                localVarFormParams, 
+                localVarFileParams,
+                localVarPathParams, 
+                localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+            
             if (localVarStatusCode >= 400)
                 throw new ApiException (localVarStatusCode, "Error calling Offercurrencies: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling Offercurrencies: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
-            return new ApiResponse<ParameterQueryServiceResponse>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ParameterQueryServiceResponse) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ParameterQueryServiceResponse)));
+
+            if (IsResponseSuccess(localVarResponse.Content))
+            {
+                var headers = localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString());
+                var data = (ParameterQueryServiceResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(ParameterQueryServiceResponse));
+
+                return new ApiResponse<ParameterQueryServiceResponse>(localVarStatusCode, headers, data);
+            }
+
+            return null;            
+        }
+
+        private bool IsResponseSuccess(string responseContent)
+        {
+            var parameterTypeDecleration = new[]
+            {
+                new
+                {
+                    value = "",
+                    description = ""
+                }
+            };
+
+            var bodyTypeDecleration = new
+            {
+                parameters = parameterTypeDecleration
+            };
+
+            var resultTypeDecleration = new
+            {
+                resultCode = "",
+                resultDescription = "",
+                body = bodyTypeDecleration,
+                resultType = ""
+            };
             
+            try
+            {
+                var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(responseContent, resultTypeDecleration);
+                if (result.resultType == "SECURITYERROR")
+                {
+                    int errorCodeIndex = result.resultDescription.IndexOf('[');
+                    string errorMessage = result.resultDescription;
+                    if (errorCodeIndex > 0)
+                        errorMessage = result.resultDescription.Substring(0, errorCodeIndex) + ".";
+
+                    throw new ApiException(401, errorMessage, result.resultDescription);
+                }
+
+                return true;
+            }
+            catch (ApiException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("OfferAPI Exception : " + ex.Message);
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("OfferAPI Exception passed : " + ex.Message);
+                return true;
+            }
         }
 
         
@@ -3019,10 +3083,9 @@ namespace gopclient.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            if (gopServiceTicket != null) localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
-            
+                        
+            if (gopServiceTicket != null)
+                localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
             
             if (body.GetType() != typeof(byte[]))
             {
@@ -3032,9 +3095,7 @@ namespace gopclient.Api
             {
                 localVarPostBody = body; // byte array
             }
-
             
-    
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
@@ -3046,10 +3107,11 @@ namespace gopclient.Api
                 throw new ApiException (localVarStatusCode, "Error calling Offerlisthistoryflexible: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling Offerlisthistoryflexible: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
-            return new ApiResponse<QueryOfferServiceResponse>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (QueryOfferServiceResponse) Configuration.ApiClient.Deserialize(localVarResponse, typeof(QueryOfferServiceResponse)));
+
+            var headers = localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString());
+            var queryResponse = (QueryOfferServiceResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(QueryOfferServiceResponse));
+
+            return new ApiResponse<QueryOfferServiceResponse>(localVarStatusCode, headers, queryResponse);
             
         }
 
@@ -3599,6 +3661,79 @@ namespace gopclient.Api
             
         }
 
+        
+        public CollateralServiceResponse ListCollateral(ServiceCollateralOrganizationRequest body, string gopServiceTicket)
+        {
+            // verify the required parameter 'body' is set
+            if (body == null)
+                throw new ApiException(400, "Missing required parameter 'body' when calling OfferApi->ListCollateral");
+
+            // verify the required parameter 'gopServiceTicket' is set
+            if (gopServiceTicket == null)
+                throw new ApiException(400, "Missing required parameter 'gopServiceTicket' when calling OfferApi->ListCollateral");
+
+
+            var localVarPath = "/collateral/organization";
+
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "application/xml"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+
+
+            if (gopServiceTicket != null) localVarHeaderParams.Add("gop-service-ticket", Configuration.ApiClient.ParameterToString(gopServiceTicket)); // header parameter
+
+
+            if (body.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(body); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = body; // byte array
+            }
+
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400)
+                throw new ApiException(localVarStatusCode, "Error calling ListCollateral: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling ListCollateral: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            var apiResponse = new ApiResponse<CollateralServiceResponse>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (CollateralServiceResponse)Configuration.ApiClient.Deserialize(localVarResponse, typeof(CollateralServiceResponse)));
+
+
+            return apiResponse.Data;
+        }
         
         /// <summary>
         /// Offer / List / Hourly Service This service lists hourly offers

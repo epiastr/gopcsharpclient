@@ -18,19 +18,22 @@ namespace gopclient.Client
     /// </summary>
     public class ApiClient
     {
+        public string servicePath = "https://testgop.epias.com.tr/gop-servis/rest";
+        public string serviceLivePath = "https://gop.epias.com.tr/gop-servis/rest";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class
-        /// with default configuration and base path (https://goptest.epias.com.tr/gop-servis/rest).
+        /// with default configuration and base path (https://testgop.epias.com.tr/gop-servis/rest).
         /// </summary>
         public ApiClient()
         {
             Configuration = Configuration.Default;
-            RestClient = new RestClient("https://goptest.epias.com.tr/gop-servis/rest");
+            RestClient = new RestClient(servicePath);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class
-        /// with default base path (https://goptest.epias.com.tr/gop-servis/rest).
+        /// with default base path (https://testgop.epias.com.tr/gop-servis/rest).
         /// </summary>
         /// <param name="config">An instance of Configuration.</param>
         public ApiClient(Configuration config = null)
@@ -40,7 +43,7 @@ namespace gopclient.Client
             else
                 Configuration = config;
 
-            RestClient = new RestClient("https://goptest.epias.com.tr/gop-servis/rest");
+            RestClient = new RestClient(servicePath);
         }
 
         /// <summary>
@@ -48,10 +51,10 @@ namespace gopclient.Client
         /// with default configuration.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "https://goptest.epias.com.tr/gop-servis/rest")
+        public ApiClient(String basePath)
         {
-           if (String.IsNullOrEmpty(basePath))
-                throw new ArgumentException("basePath cannot be empty");
+            if (String.IsNullOrEmpty(basePath))
+                basePath = servicePath;
 
             RestClient = new RestClient(basePath);
             Configuration = Configuration.Default;

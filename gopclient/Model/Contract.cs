@@ -16,15 +16,16 @@ namespace gopclient.Model
     /// </summary>
     [DataContract]
     public partial class Contract :  IEquatable<Contract>
-    { 
-    
+    {
+        #region Enums
+
         /// <summary>
         /// This field keeps Contract Status.
         /// </summary>
         /// <value>This field keeps Contract Status.</value>
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum StatusEnum {
-            
+        public enum StatusEnum
+        {
             [EnumMember(Value = "APPROVED")]
             Approved,
             
@@ -35,14 +36,24 @@ namespace gopclient.Model
             Invalid
         }
 
-    
         /// <summary>
-        /// This field keeps Contract Status.
+        /// This field keeps Contract CancellationTypeEnum.
         /// </summary>
-        /// <value>This field keeps Contract Status.</value>
-        [DataMember(Name="status", EmitDefaultValue=false)]
-        public StatusEnum? Status { get; set; }
-    
+        /// <value>This field keeps Contract CancellationTypeEnum.</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum CancellationTypeEnum
+        {
+            [EnumMember(Value = "BILATERAL")]
+            Bilateral,
+
+            [EnumMember(Value = "UNILATERAL")]
+            Unilateral
+        }
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Contract" /> class.
         /// Initializes a new instance of the <see cref="Contract" />class.
@@ -68,10 +79,12 @@ namespace gopclient.Model
             this.State = State;
             this.User = User;
             this.OrganizationShortName = OrganizationShortName;
-            
         }
-        
-    
+
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// This field keeps Contract ID.
         /// </summary>
@@ -106,7 +119,14 @@ namespace gopclient.Model
         /// <value>This field keeps Informat\u0131on of Counter Offer.</value>
         [DataMember(Name="counterOffer", EmitDefaultValue=false)]
         public ContractOfferResponseModel CounterOffer { get; set; }
-    
+
+        /// <summary>
+        /// This field keeps Contract Status.
+        /// </summary>
+        /// <value>This field keeps Contract Status.</value>
+        [DataMember(Name = "status", EmitDefaultValue = false)]
+        public StatusEnum? Status { get; set; }
+
         /// <summary>
         /// This field keeps the reason for increasing the version
         /// </summary>
@@ -127,7 +147,33 @@ namespace gopclient.Model
         /// <value>This field keeps organization short name for the user who did the most recent update on contracts.</value>
         [DataMember(Name="organizationShortName", EmitDefaultValue=false)]
         public string OrganizationShortName { get; set; }
-    
+
+        /// <summary>
+        /// This field keeps ModifyDate.
+        /// </summary>
+        /// <value>This field keeps organization short name for the user who did the most recent update on contracts.</value>
+        [DataMember(Name = "modifyDate", EmitDefaultValue = false)]
+        public DateTime? ModifyDate { get; set; }
+
+
+        /// <summary>
+        /// This field keeps originator for contract owner.
+        /// </summary>
+        /// <value>This field keeps organization short name for the user who did the most recent update on contracts.</value>
+        [DataMember(Name = "originator", EmitDefaultValue = false)]
+        public string Originator { get; set; }
+
+        /// <summary>
+        /// This field keeps Contract CancellationType.
+        /// </summary>
+        /// <value>This field keeps Contract Status.</value>
+        [DataMember(Name = "cancellationType", EmitDefaultValue = false)]
+        public CancellationTypeEnum? CancellationType { get; set; }
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -272,5 +318,6 @@ namespace gopclient.Model
             }
         }
 
+        #endregion
     }
 }
